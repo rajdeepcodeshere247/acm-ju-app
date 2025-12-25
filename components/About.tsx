@@ -64,7 +64,7 @@ export default function About() {
                 </span>
 
                 {/* Animated stats or features */}
-                <div className="grid grid-cols-3 gap-4 mt-12">
+                <div className="grid grid-cols-3 gap-4 mt-12" style={{ perspective: '1000px' }}>
                     {[
                         { label: 'Members', value: '500+', icon: '👥' },
                         { label: 'Events', value: '50+', icon: '🎯' },
@@ -72,12 +72,38 @@ export default function About() {
                     ].map((stat, index) => (
                         <div 
                             key={index}
-                            className="group relative bg-gradient-to-br from-white to-gray-50 p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-default"
-                            style={{ animationDelay: `${index * 100}ms` }}
+                            className="group relative bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-default overflow-hidden"
+                            style={{ 
+                                animationDelay: `${index * 100}ms`,
+                                transformStyle: 'preserve-3d',
+                                transform: 'translateZ(0)'
+                            }}
                         >
-                            <div className="text-2xl mb-2 transform group-hover:scale-110 transition-transform duration-300">{stat.icon}</div>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{stat.value}</div>
-                            <div className="text-xs text-gray-600 uppercase tracking-wide">{stat.label}</div>
+                            {/* 3D Depth layers */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-xl transition-all duration-500 group-hover:translate-z-[-20px]" style={{ transform: 'translateZ(-20px)' }}></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl transition-all duration-500 group-hover:translate-z-[-10px]" style={{ transform: 'translateZ(-10px)' }}></div>
+                            
+                            {/* Animated border gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" style={{ padding: '2px' }}>
+                                <div className="absolute inset-[2px] bg-gradient-to-br from-white to-gray-50 rounded-xl"></div>
+                            </div>
+                            
+                            {/* Shine effect */}
+                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+                            
+                            {/* 3D Shadow effect */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 via-purple-600/0 to-pink-600/0 group-hover:from-blue-600/10 group-hover:via-purple-600/10 group-hover:to-pink-600/10 rounded-xl transition-all duration-500" style={{ transform: 'translateZ(-5px)' }}></div>
+                            
+                            {/* Content */}
+                            <div className="relative z-10 transition-all duration-500 group-hover:transform group-hover:translate-z-[30px]" style={{ transformStyle: 'preserve-3d' }}>
+                                <div className="text-3xl mb-3 transform group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500" style={{ transform: 'translateZ(20px)' }}>{stat.icon}</div>
+                                <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-pink-500 transition-all duration-500 bg-[length:200%_auto] group-hover:bg-right" style={{ transform: 'translateZ(15px)' }}>{stat.value}</div>
+                                <div className="text-xs text-gray-600 uppercase tracking-wide group-hover:text-gray-800 group-hover:tracking-widest transition-all duration-300 mt-1" style={{ transform: 'translateZ(10px)' }}>{stat.label}</div>
+                            </div>
+                            
+                            {/* 3D Corner highlight */}
+                            <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-blue-400/0 to-transparent group-hover:from-blue-400/20 transition-all duration-500 rounded-tr-xl" style={{ transform: 'translateZ(5px)' }}></div>
+                            <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-400/0 to-transparent group-hover:from-purple-400/20 transition-all duration-500 rounded-bl-xl" style={{ transform: 'translateZ(5px)' }}></div>
                         </div>
                     ))}
                 </div>
