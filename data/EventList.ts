@@ -1,0 +1,51 @@
+export const eventList: EventData[] = [
+  {
+    id: 1,
+    title: "Deep Learning in Remote Sensing",
+    speakers: ["Dr. Biplab Banerjee"],
+    date: new Date("2023-10-09"),
+    mode: "Online",
+    images: [],
+    description: "An Introduction to deep Learning in Remote Sensing",
+  },
+  {
+    id: 2,
+    title: "Beyond the Rhetoric",
+    speakers: ["Dr. Swarna Kamal Paul", "Mr. Raghubir Bose"],
+    date: new Date("2023-10-23"),
+    mode: "In-Person",
+    images: [],
+    description: "An Introduction to AGI and MLOps",
+  },
+  {
+    id: 3,
+    title: "Synchronicity - Season 1",
+    speakers: [],
+    date: new Date("2024-01-20"),
+    mode: "In-Person",
+    images: [],
+    description:
+      "A day long hackathon, where teams built interactive solutions to unique challenges.",
+  },
+  {
+    id: 4,
+    title: "Blockchain and Generative AI: Industry and Research Insights",
+    speakers: [
+      "Mr. Hiren Dutta",
+      "Prof. Viraj Kumar, Visiting Professor, KIAC",
+    ],
+    date: new Date("2024-03-15"),
+    mode: "In-Person",
+    images: [],
+    description: `The seminar is an insightful event with two esteemed speakers: Mr. Hiren Dutta who illustrates the use of blockchain and its use cases in the industry, and Prof. Viraj Kumar, Visiting Professor, KIAC (Kotak-IISc AI-ML Center) who will give pointers on how to leverage generative artificial intelligence in programming. This will be beneficial to students who want to do research and explore its applications in the real world.`,
+  },
+  {
+    id: 5,
+    title: "Jadavpur University Club Fair",
+    speakers: [],
+    date: new Date("2024-09-13"),
+    mode: "In-Person",
+    images: [],
+    description: `Jadavpur University ACM Students Chapter was involved in the Club Fair happened during NAAC visit in our campus. A small stall was setup and we promoted club activities to visitors.`,
+  },
+];
