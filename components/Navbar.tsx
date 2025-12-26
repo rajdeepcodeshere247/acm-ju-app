@@ -1,19 +1,29 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function NavLinkListItem({ link, text }: { link: string; text: string }) {
     return (
-        <li className="relative group">
-            <a
+        <motion.li
+            whileHover={{ y: -2 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+            <Link
                 href={link}
-                className="p-4 block text-sm font-medium text-gray-700 transition-all duration-300 hover:text-[#005a83] relative"
+                className="p-4 block text-sm font-medium relative group"
             >
-                {text}
-                <span className="absolute bottom-2 left-4 right-4 h-0.5 bg-gradient-to-r from-[#005a83] to-[#0084c7] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-            </a>
-        </li>
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-[#005a83]">
+                    {text}
+                </span>
+                <motion.span
+                    className="absolute bottom-2 left-4 right-4 h-0.5 bg-gradient-to-r from-[#005a83] to-[#0088cc] origin-left"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+            </Link>
+        </motion.li>
     );
 }
 
@@ -21,55 +31,80 @@ function NavDropdown({ text, items }: { text: string; items: { link: string; tex
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <li 
-            className="relative group" 
-            onMouseEnter={() => setIsOpen(true)} 
+        <motion.li
+            className="relative"
+            onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
+            whileHover={{ y: -2 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-            <button className="p-4 flex items-center gap-1 text-sm font-medium text-gray-700 transition-all duration-300 hover:text-[#005a83]">
-                {text}
-                <ChevronDown 
-                    className={`w-4 h-4 transition-transform duration-300 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+            <button className="p-4 block text-sm font-medium relative group">
+                <span className="relative z-10 transition-colors duration-300 group-hover:text-[#005a83]">
+                    {text}
+                </span>
+                <motion.span
+                    className="ml-1 inline-block transition-transform duration-300"
+                    animate={{ rotate: isOpen ? 180 : 0 }}
+                >
+                    ▾
+                </motion.span>
+                <motion.span
+                    className="absolute bottom-2 left-4 right-4 h-0.5 bg-gradient-to-r from-[#005a83] to-[#0088cc] origin-left"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: isOpen ? 1 : 0 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                 />
             </button>
-            
-            <div className={`absolute left-0 mt-0 transition-all duration-300 ${
-                isOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'
-            }`}>
-                <ul className="bg-white shadow-2xl rounded-xl min-w-[180px] overflow-hidden border border-gray-100 backdrop-blur-lg">
-                    {items.map((item, index) => (
-                        <li 
-                            key={item.link}
-                            className="transform transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50"
-                            style={{
-                                transitionDelay: isOpen ? `${index * 50}ms` : '0ms'
-                            }}
-                        >
-                            <a
-                                href={item.link}
-                                className="block px-5 py-3 text-sm text-gray-700 hover:text-[#005a83] transition-colors duration-200 relative group/item"
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.ul
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute left-0 mt-0 bg-white/95 backdrop-blur-md shadow-2xl rounded-xl min-w-[180px] z-50 overflow-hidden border border-gray-100"
+                    >
+                        {items.map((item, index) => (
+                            <motion.li
+                                key={item.link}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.05, duration: 0.2 }}
+                                whileHover={{ x: 4 }}
                             >
-                                <span className="relative z-10">{item.text}</span>
-                                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-[#005a83] group-hover/item:h-full transition-all duration-300 rounded-r"></span>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </li>
+                                <Link
+                                    href={item.link}
+                                    className="block px-5 py-3 text-sm relative overflow-hidden group"
+                                >
+                                    <motion.span
+                                        className="absolute inset-0 bg-gradient-to-r from-[#005a83]/5 to-[#0088cc]/5"
+                                        initial={{ x: "-100%" }}
+                                        whileHover={{ x: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                    />
+                                    <span className="relative z-10 transition-colors duration-300 group-hover:text-[#005a83] font-medium">
+                                        {item.text}
+                                    </span>
+                                </Link>
+                            </motion.li>
+                        ))}
+                    </motion.ul>
+                )}
+            </AnimatePresence>
+        </motion.li>
     );
 }
 
 export default function Navbar() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const recruitmentItems = [
@@ -79,130 +114,102 @@ export default function Navbar() {
     ];
 
     return (
-        <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-            scrolled ? 'bg-white/80 backdrop-blur-xl shadow-lg border-b border-gray-200/50' : 'bg-white/70 backdrop-blur-md border-b border-gray-100/30'
-        }`}>
-            <nav className="flex items-center justify-between w-full px-4 md:px-6 py-4 text-lg text-gray-700 max-w-7xl mx-auto">
-                {/* Logo */}
-                <a href="/" className="flex items-center cursor-pointer group relative mr-auto">
-                    <div className="absolute -inset-2 bg-gradient-to-r from-blue-100/50 to-cyan-100/50 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500 blur-sm"></div>
-                    <div className="relative flex items-center">
+        <motion.header
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            className="sticky top-0 z-50"
+        >
+            <motion.nav
+                animate={{
+                    backgroundColor: scrolled ? "rgba(255, 255, 255, 0.95)" : "rgba(255, 255, 255, 1)",
+                    boxShadow: scrolled ? "0 10px 30px -10px rgba(0, 90, 131, 0.15)" : "0 0 0 0 rgba(0, 90, 131, 0)"
+                }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-wrap items-center justify-between w-full px-4 py-3 text-lg text-gray-700 md:py-0 backdrop-blur-md"
+            >
+                <Link href="/" className="flex items-center cursor-pointer p-3 group">
+                    <motion.div
+                        whileHover={{ scale: 1.05, rotate: 5 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
                         <img
-                            className="h-11 md:h-12 mr-2 md:mr-3 transform transition-all duration-500 group-hover:rotate-6 group-hover:scale-105"
+                            className="h-12 mr-3 transition-all duration-300 group-hover:drop-shadow-lg"
                             alt="jadavpur university acm student chapter logo"
                             src="/ju-acm.svg"
                         />
-                        <h2 className="font-semibold text-xs md:text-sm leading-tight text-sky-800 transition-all duration-300 group-hover:text-[#005a83]">
+                    </motion.div>
+                    <motion.h2
+                        className="font-semibold text-sm leading-2 text-sky-800 relative"
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    >
+                        <span className="bg-gradient-to-r from-sky-800 to-[#005a83] bg-clip-text text-transparent">
                             JU ACM
                             <br />
-                            <span className="text-[10px] md:text-xs text-gray-600 group-hover:text-[#0084c7]">Student Chapter</span>
-                        </h2>
-                    </div>
-                </a>
+                            Student Chapter
+                        </span>
+                    </motion.h2>
+                </Link>
 
-                {/* Mobile Menu Button */}
-                <button
+                <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-all duration-300 active:scale-95"
+                    className="block md:hidden relative w-8 h-8"
                 >
-                    {mobileMenuOpen ? (
-                        <X className="w-6 h-6 text-gray-700" />
-                    ) : (
-                        <Menu className="w-6 h-6 text-gray-700" />
-                    )}
-                </button>
+                    <motion.div
+                        animate={mobileMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute w-6 h-0.5 bg-gray-700 top-2 left-1"
+                    />
+                    <motion.div
+                        animate={mobileMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute w-6 h-0.5 bg-gray-700 top-1/2 left-1 -translate-y-1/2"
+                    />
+                    <motion.div
+                        animate={mobileMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute w-6 h-0.5 bg-gray-700 bottom-2 left-1"
+                    />
+                </motion.button>
 
-                {/* Desktop Menu */}
-                <ul className="hidden md:flex md:items-center md:gap-1">
-                    <NavLinkListItem link="/" text="Home" />
-                    <NavLinkListItem link="/contact" text="Contact" />
-                    <NavLinkListItem link="/events" text="Events" />
-                    <NavDropdown text="Recruitment" items={recruitmentItems} />
-                    <li className="ml-2">
-                        <a
-                            href="/register"
-                            className="relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white rounded-full overflow-hidden group transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg"
-                            style={{
-                                background: 'linear-gradient(180deg, #0EA5E9 0%, #0284C7 100%)',
-                                boxShadow: '0 4px 16px rgba(14, 165, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
-                            }}
+                <AnimatePresence>
+                    {(mobileMenuOpen || window.innerWidth >= 768) && (
+                        <motion.ul
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="pt-4 text-base text-gray-700 md:flex md:justify-between md:pt-0 w-full md:items-center md:w-auto md:opacity-100 md:h-auto"
                         >
-                            {/* Inner highlight (iPhone glass effect) */}
-                            <span className="absolute inset-0 rounded-full bg-gradient-to-b from-white/25 via-transparent to-transparent opacity-100 group-hover:opacity-80 transition-opacity duration-300"></span>
-                            
-                            {/* Active state overlay */}
-                            <span className="absolute inset-0 rounded-full bg-black/0 group-active:bg-black/10 transition-colors duration-100"></span>
-                            
-                            {/* Hover glow */}
-                            <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 opacity-0 group-hover:opacity-50 blur-lg transition-opacity duration-500 -z-10"></span>
-                            
-                            {/* Text with subtle shadow */}
-                            <span className="relative z-10 tracking-wide" style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
-                                Register
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-
-                {/* Mobile Menu */}
-                <div className={`md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-lg shadow-2xl transition-all duration-500 overflow-hidden ${
-                    mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                }`}>
-                    <ul className="py-4 px-4 space-y-1">
-                        {['Home', 'Contact', 'Events'].map((item, index) => (
-                            <li 
-                                key={item}
-                                className="transform transition-all duration-300"
-                                style={{
-                                    transitionDelay: mobileMenuOpen ? `${index * 50}ms` : '0ms',
-                                    transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(-20px)'
-                                }}
+                            <NavLinkListItem link="/" text="Home" />
+                            <NavLinkListItem link="/contact" text="Contact" />
+                            <NavLinkListItem link="/events" text="Events" />
+                            <NavDropdown text="Recruitment" items={recruitmentItems} />
+                            <motion.li
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
-                                <a
-                                    href={`/${item.toLowerCase() === 'home' ? '' : item.toLowerCase()}`}
-                                    className="block px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#005a83] hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 rounded-lg transition-all duration-300"
+                                <Link
+                                    href="/register"
+                                    className="m-4 inline-block px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#005a83] to-[#0088cc] rounded-full relative overflow-hidden group shadow-lg hover:shadow-xl transition-shadow duration-300"
                                 >
-                                    {item}
-                                </a>
-                            </li>
-                        ))}
-                        
-                        <li className="pt-2 space-y-1">
-                            <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                Recruitment
-                            </div>
-                            {recruitmentItems.map((item, index) => (
-                                <a
-                                    key={item.link}
-                                    href={item.link}
-                                    className="block px-6 py-2.5 text-sm text-gray-700 hover:text-[#005a83] hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 rounded-lg transition-all duration-300"
-                                    style={{
-                                        transitionDelay: mobileMenuOpen ? `${(index + 3) * 50}ms` : '0ms'
-                                    }}
-                                >
-                                    {item.text}
-                                </a>
-                            ))}
-                        </li>
-                        
-                        <li className="pt-4 px-4">
-                            <a
-                                href="/register"
-                                className="relative inline-flex items-center justify-center w-full px-6 py-3 text-sm font-semibold text-white rounded-full overflow-hidden active:scale-[0.98] transition-all duration-200 shadow-lg"
-                                style={{
-                                    background: 'linear-gradient(180deg, #0EA5E9 0%, #0284C7 100%)',
-                                    boxShadow: '0 4px 16px rgba(14, 165, 233, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
-                                }}
-                            >
-                                <span className="absolute inset-0 rounded-full bg-gradient-to-b from-white/25 via-transparent to-transparent"></span>
-                                <span className="relative z-10" style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
-                                    Register
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
+                                    <motion.span
+                                        className="absolute inset-0 bg-gradient-to-r from-[#0088cc] to-[#005a83]"
+                                        initial={{ x: "-100%" }}
+                                        whileHover={{ x: 0 }}
+                                        transition={{ duration: 0.4 }}
+                                    />
+                                    <span className="relative z-10">Register</span>
+                                </Link>
+                            </motion.li>
+                        </motion.ul>
+                    )}
+                </AnimatePresence>
+            </motion.nav>
+        </motion.header>
     );
 }
