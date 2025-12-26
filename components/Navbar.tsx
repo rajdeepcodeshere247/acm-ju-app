@@ -98,8 +98,10 @@ function NavDropdown({ text, items }: { text: string; items: { link: string; tex
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setIsMounted(true);
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
@@ -176,15 +178,12 @@ export default function Navbar() {
                     />
                 </motion.button>
 
-                <AnimatePresence>
-                    {(mobileMenuOpen || window.innerWidth >= 768) && (
-                        <motion.ul
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="pt-4 text-base text-gray-700 md:flex md:justify-between md:pt-0 w-full md:items-center md:w-auto md:opacity-100 md:h-auto"
-                        >
+                <motion.ul
+                    initial={false}
+                    animate={mobileMenuOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="pt-4 text-base text-gray-700 md:flex md:justify-between md:pt-0 md:opacity-100 md:h-auto w-full md:items-center md:w-auto overflow-hidden"
+                >
                             <NavLinkListItem link="/" text="Home" />
                             <NavLinkListItem link="/contact" text="Contact" />
                             <NavLinkListItem link="/events" text="Events" />
@@ -207,8 +206,6 @@ export default function Navbar() {
                                 </Link>
                             </motion.li>
                         </motion.ul>
-                    )}
-                </AnimatePresence>
             </motion.nav>
         </motion.header>
     );
