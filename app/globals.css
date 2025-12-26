@@ -4,25 +4,29 @@
 
 .hero {
     position: relative;
-    height: 85vh;
+    height: 100vh;   /* instead of 85vh */
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+
 .hero::before {
     content: "";
+    position: absolute;
+    top: 0;        /* remove the negative offset */
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-image: url("/Jadavpur_University_Hero.jpg");
     background-size: cover;
-    position: absolute;
-    top: -50px;
-    right: 0px;
-    left: 0px;
-    bottom: 0px;
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -1;
     filter: brightness(40%);
 }
+
 
 @layer utilities {
     /* Hide scrollbar for Chrome, Safari and Opera */
