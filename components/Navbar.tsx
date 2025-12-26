@@ -182,7 +182,9 @@ export default function Navbar() {
                     initial={false}
                     animate={mobileMenuOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="pt-4 text-base text-gray-700 md:flex md:justify-between md:pt-0 md:opacity-100 md:h-auto w-full md:items-center md:w-auto overflow-hidden"
+                    className={`pt-4 text-base text-gray-700 w-full md:items-center md:w-auto ${
+                        mobileMenuOpen ? "block" : "hidden"
+                    } md:flex md:justify-between md:pt-0 md:opacity-100 md:h-auto overflow-hidden md:overflow-visible`}
                 >
                             <NavLinkListItem link="/" text="Home" />
                             <NavLinkListItem link="/contact" text="Contact" />
