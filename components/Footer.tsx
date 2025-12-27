@@ -26,7 +26,7 @@ const chapterSocialMediaHandles = [
 ];
 
 export default function Footer() {
-    const [hoveredSocial, setHoveredSocial] = useState(null);
+    const [hoveredSocial, setHoveredSocial] = useState<number | null>(null);
     const [isMapHovered, setIsMapHovered] = useState(false);
     const currentYear = new Date().getFullYear();
 
